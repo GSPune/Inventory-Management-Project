@@ -26,7 +26,7 @@ body
         "product_price" : Number}
     ]
 }
-400 - Bad Request - Incorrect Email/Password
+400 - Bad Request - Invalid Input
 403 - Forbidden
 404 - Not Found
 500 - Internal Server Error
