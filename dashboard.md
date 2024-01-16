@@ -8,12 +8,13 @@ Content-Type : application/json
 ```
 ### Request Body
 ```
-//inputs for time period - daily,weekly,monthly,year
+[//]: #(No inputs taken for this page...(static) stats and reports presented only)
 
 ```
 ### Response
 ```
 200 - Success
+[//]: #(Data to be extracted from the DB to generate summary!)
 400 - Bad Request - Incorrect Email/Password
 403 - Forbidden
 404 - Not Found
