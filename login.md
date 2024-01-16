@@ -21,7 +21,8 @@ Body
     "user_id": Number,
     "username" : "String",  
 }
-Redirect to ("/")
+
+<!-- Redirect to ("/") -->
 400 - Bad Request - Incorrect Email/Password
 403 - Forbidden
 404 - Not Found
