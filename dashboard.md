@@ -16,6 +16,13 @@ Content-Type : application/json
 ```
 200 - Success
 [//]: #(Data to be extracted from the DB to generate summary!)
+body
+{
+    "Sales": Number,
+    "Expenses": Number,
+    "Profits":Number,
+    "Pie_Chart1_Data" : []
+}
 400 - Bad Request - Incorrect Email/Password
 403 - Forbidden
 404 - Not Found
