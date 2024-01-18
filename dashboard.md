@@ -6,9 +6,10 @@ POST /v1/
 ```
 Content-Type : application/json
 ```
+<!-- (No inputs taken for this page...(static) stats and reports presented only) -->
 ### Request Body
 ```
-[//]: #(No inputs taken for this page...(static) stats and reports presented only)
+
 
 ```
 ### Response
