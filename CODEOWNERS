@@ -8,7 +8,7 @@
 
 *.py @GSPune
 
-.*md  @GSPune
+*.md  @GSPune
 
 /Frontend/ @shubhada10kunde @GSPune
 /Backend/ @GSPune
