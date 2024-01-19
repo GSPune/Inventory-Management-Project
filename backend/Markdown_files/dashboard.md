@@ -1,16 +1,17 @@
 ## Dashboard
 ```
-POST /v1/
+POST /v1/dashboard
 ```
 ### Request Headers
 ```
 Content-Type : application/json
-"user_id": Number 
+User_Id : Number 
 ```
 <!-- Or have User Token -->
 ### Request Body
-```
 <!-- (No inputs taken for this page...(static) stats and reports presented only) -->
+```
+
 
 ```
 ### Response
@@ -30,7 +31,7 @@ body
     "Pie_Chart2_Data":[
         {
             "Stock_Alert_Type" : "String",
-            "Amount" : Number} 
+            "Amount" : Number } 
         ],
     "ReducingSales_TableData":[
         {

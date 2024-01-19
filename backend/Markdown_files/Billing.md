@@ -1,18 +1,23 @@
 ## Bill
 
-GET/POST/API/A1/Bill
+POST /v1/billing
 
 ### Request Headers
 
-Content-Type : application/jsong
+Content-Type : application/json
 
 ### Request Body
 ```
 {
-    "Date":"String",    
-    "Product_Name":"String",      
-    "Quantity":Number,  
-    "Customer_Name":"String"
+    "Date":"String",
+    "Customer_Name":"String",   
+    "Input_Products":[
+    {
+        "Product_Names":"String",      
+        "Quantity":Number,
+        "Qty":Number }
+    ]
+    
 }
 ```
 ### Response
@@ -20,11 +25,17 @@ Content-Type : application/jsong
 200 - Success
 Body
 {
-    "Sr_No":Number  
-    "Product_id":Number   
-    "Quantity":Number
-    "Price":Number   
-    "Net_Amount":Number
+    "Customer_Name":"String",
+    "Mobile No": Number,
+    "Bill_No":Number, 
+    "Output_Products":[
+    {
+        "Sr_No":Number , 
+        "Product_id":Number,
+        "Quantity":Number,
+        "Price":Number,  
+        "Net_Amount":Number }
+    ] 
 }
 400 - Bad Request - Incorrect Input
 403 - Forbidden

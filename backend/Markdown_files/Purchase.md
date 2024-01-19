@@ -1,6 +1,6 @@
 ## Purchase
 ```
-GET/POST/API/A2/Purchase
+POST /v2/purchases
 ```
 ### Request Headers
 ```
@@ -8,11 +8,15 @@ Content-Type : application/jsong
 ```
 ### Request Body
 ```
-{   
-    "Date":"String",    
-    "Product_Name":"String",      
-    "Quantity":Number,  
-    "Supplier_Name":"String"
+{
+    "Date":"String",
+    "Supplier_Name":"String",   
+    "Input_Products":[
+    {
+        "Product_Names":"String",      
+        "Quantity":Number,
+        "Qty":Number }
+    ]
 }
 ```
 
@@ -21,11 +25,20 @@ Content-Type : application/jsong
 200 - Success
 Body
 {
-"Sr_No":Number  
-"Product_id":Number   
-"Quantity":Number
-"Price":Number   
-"Net_Amount":Number
+    "Supplier_Name":"String",
+    "Mobile No": Number,
+    "Comapany Name": "String"
+    "Bill_No":Number,
+
+    "Output_Products":[
+    {
+        "Sr_No":Number , 
+        "Product_id":Number,
+        "Quantity":Number,
+        "Price":Number,  
+        "Net_Amount":Number }
+    ] 
+    
 }
 400 - Bad Request - Incorrect input
 403 - Forbidden
