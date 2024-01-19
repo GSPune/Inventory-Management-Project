@@ -23,7 +23,8 @@ body
         {"product_no" : Number,
         "product_name" : "String",
         "product_qty" : Number,
-        "product_price" : Number}
+        "product_price" : Number,
+        "expiry_date": "String"}
     ]
 }
 400 - Bad Request - Invalid Input

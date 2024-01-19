@@ -6,10 +6,10 @@ POST /v1/
 ```
 Content-Type : application/json
 ```
-<!-- (No inputs taken for this page...(static) stats and reports presented only) -->
+
 ### Request Body
 ```
-
+<!-- (No inputs taken for this page...(static) stats and reports presented only) -->
 
 ```
 ### Response
@@ -21,7 +21,28 @@ body
     "Sales": Number,
     "Expenses": Number,
     "Profits":Number,
-    "Pie_Chart1_Data" : []
+    "Pie_Chart1_Data" :[
+        {
+            "Product Name":"String",
+            "Contribution%" : Number
+        }
+        ]
+    "Pie_Chart2_Data":[
+        {
+            "Stock_Alert_Type" : "String",
+            "Amount" : Number
+        }
+    ]
+    "ReducingSales_TableData":[
+        {
+            "Low_Sales" : boolean,
+            "No_Sales" : boolean,
+            "Category" : "String:,
+            "product_no" : Number,
+            "product_name" : "String",
+            "product_qty" : Number
+        }
+    ]
 }
 400 - Bad Request - Incorrect Email/Password
 403 - Forbidden
