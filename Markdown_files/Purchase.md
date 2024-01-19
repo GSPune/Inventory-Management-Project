@@ -1,20 +1,20 @@
 ## Purchase
-
+```
 GET/POST/API/A2/Purchase
-
+```
 ### Request Headers
-
+```
 Content-Type : application/jsong
-
+```
 ### Request Body
-
+```
 {   
-"Date":"String",    
-"Product_Name":"String",      
-"Quantity":Number,  
-"Supplier_Name":"String"
- 
+    "Date":"String",    
+    "Product_Name":"String",      
+    "Quantity":Number,  
+    "Supplier_Name":"String"
 }
+```
 
 ### Response
 ```

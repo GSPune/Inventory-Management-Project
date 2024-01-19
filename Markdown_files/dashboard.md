@@ -5,8 +5,9 @@ POST /v1/
 ### Request Headers
 ```
 Content-Type : application/json
+"user_id": Number 
 ```
-
+<!-- Or have User Token -->
 ### Request Body
 ```
 <!-- (No inputs taken for this page...(static) stats and reports presented only) -->
@@ -24,15 +25,13 @@ body
     "Pie_Chart1_Data" :[
         {
             "Product Name":"String",
-            "Contribution%" : Number
-        }
-        ]
+            "Contribution%" : Number } 
+        ],
     "Pie_Chart2_Data":[
         {
             "Stock_Alert_Type" : "String",
-            "Amount" : Number
-        }
-    ]
+            "Amount" : Number} 
+        ],
     "ReducingSales_TableData":[
         {
             "Low_Sales" : boolean,
@@ -40,9 +39,8 @@ body
             "Category" : "String:,
             "product_no" : Number,
             "product_name" : "String",
-            "product_qty" : Number
-        }
-    ]
+            "product_qty" : Number }
+        ]
 }
 403 - Forbidden
 404 - Not Found

@@ -7,25 +7,26 @@ GET/POST/API/A1/Bill
 Content-Type : application/jsong
 
 ### Request Body
+```
 {
-"date":"String",    
-"Product_Name":"String",      
-"Quantity":Number,  
-"Customer_Name":"String"
- 
+    "Date":"String",    
+    "Product_Name":"String",      
+    "Quantity":Number,  
+    "Customer_Name":"String"
 }
+```
 ### Response
 ```
 200 - Success
 Body
 {
-"Sr_No":Number  
-"Product_id":Number   
-"Quantity":Number
-"Price":Number   
-"Net_Amount":Number
+    "Sr_No":Number  
+    "Product_id":Number   
+    "Quantity":Number
+    "Price":Number   
+    "Net_Amount":Number
 }
-400 - Bad Request - Incorrect input
+400 - Bad Request - Incorrect Input
 403 - Forbidden
 404 - Not Found
 500 - Internal Server Error
