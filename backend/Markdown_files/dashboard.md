@@ -1,15 +1,17 @@
 ## Dashboard
 ```
-POST /v1/
+POST /v1/dashboard
 ```
 ### Request Headers
 ```
 Content-Type : application/json
+User_Id : Number 
+```
+<!-- Or have User Token -->
+### Request Body
+<!-- (No inputs taken for this page...(static) stats and reports presented only) -->
 ```
 
-### Request Body
-```
-<!-- (No inputs taken for this page...(static) stats and reports presented only) -->
 
 ```
 ### Response
@@ -24,15 +26,13 @@ body
     "Pie_Chart1_Data" :[
         {
             "Product Name":"String",
-            "Contribution%" : Number
-        }
-        ]
+            "Contribution%" : Number } 
+        ],
     "Pie_Chart2_Data":[
         {
             "Stock_Alert_Type" : "String",
-            "Amount" : Number
-        }
-    ]
+            "Amount" : Number } 
+        ],
     "ReducingSales_TableData":[
         {
             "Low_Sales" : boolean,
@@ -40,9 +40,8 @@ body
             "Category" : "String:,
             "product_no" : Number,
             "product_name" : "String",
-            "product_qty" : Number
-        }
-    ]
+            "product_qty" : Number }
+        ]
 }
 403 - Forbidden
 404 - Not Found

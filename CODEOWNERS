@@ -1,0 +1,14 @@
+#pattern
+#
+#file/directory user
+
+* @GSPune
+
+*.js @shubhada10kunde @GSPune 
+
+*.py @GSPune
+
+*.md  @GSPune
+
+/Frontend/ @shubhada10kunde @GSPune
+/Backend/ @GSPune
