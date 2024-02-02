@@ -14,6 +14,7 @@ Content-Type : application/json
     "Password": "String"
 }
 ```
+<!-- Redirect to ("/") -->
 ### Response
 ```
 200 - Success
@@ -23,7 +24,6 @@ Body
     "username" : "String",  
 }
 
-<!-- Redirect to ("/") -->
 400 - Bad Request - Incorrect Email/Password
 403 - Forbidden
 404 - Not Found
