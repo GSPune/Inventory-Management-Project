@@ -17,7 +17,10 @@ Content-Type : application/json
 ### Response
 ```
 200 - Success
-
+Body
+{
+    "email": "String"
+}
 400 - Bad Request - Incorrect Email/Password
 403 - Forbidden
 404 - Not Found
