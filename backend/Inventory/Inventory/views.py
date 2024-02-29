@@ -49,3 +49,5 @@ def sendemail(request):
     )
     return Response({"Success":"True","email":email},status=status.HTTP_200_OK)
 
+'''Base64 is a binary to a text encoding scheme that represents binary data in an ASCII string 
+format — essential for carrying data stored in binary across channels.'''
