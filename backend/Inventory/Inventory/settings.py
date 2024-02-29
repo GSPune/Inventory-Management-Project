@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['192.168.150.25','127.0.0.1','localhost']
 INSTALLED_APPS = [
     'rest_framework',
     'users',
+    'products',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
