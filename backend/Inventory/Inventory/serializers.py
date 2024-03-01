@@ -9,10 +9,13 @@ class UserSerializer(serializers.ModelSerializer):
       for generating JSON output directly from the database model, and 
       for creating new model instances from JSON input.
     
-      The Meta class within the serializer class specifies the model to be serialized 
+      The Meta class within the serializer class specifies the model to be serialized &
       the fields to be included in the serialized output.'''
     class Meta(object):
         model = User
         fields = ['id','username','is_superuser']
         #fields = ['id','username','password','email']
+
+    def create(self,validate_data):
+        return User.objects.create(**validate_data)
         
