@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 from rest_framework.authentication import SessionAuthentication
+import base64
 
 @api_view(['POST'])
 def login(request):
@@ -46,7 +47,7 @@ def sendemail(request):
     [email],
     fail_silently=False,
     html_message= "Here is the link to the sign up page.Email address should already be auto-filled!<br>"
-    "<a href=\"http://127.0.0.1:3000/register/?email="+email+"\">Click Here!</a>"
+    "<a href=\"http://127.0.0.1:3000/register?email="+str(base64.urlsafe_b64encode(email.encode()),encoding='utf-8')+"\">Click Here!</a>"
     )
     return Response({"Success":"True","email":email},status=status.HTTP_200_OK)
 
@@ -57,6 +58,7 @@ format — essential for carrying data stored in binary across channels.'''
 def register(request):
     if request.method == 'POST':
         serializer = UserSerializer(data = request.data)
+        #email = str(base64.urlsafe_b64decode(request.data['email'].encode()),encoding='utf-8')
     if serializer.is_valid():
         serializer.save()
         user = User.objects.get(username = request.data['username'])
