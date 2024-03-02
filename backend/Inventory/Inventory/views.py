@@ -18,7 +18,8 @@ def login(request):
     #token
     #login(request, user)
     serializer = UserSerializer(instance=user)
-    return Response(serializer.data)
+    return JsonResponse(serializer.data)
+    #return Response(serializer.data)
 
 '''
 username = request.data['username']
@@ -45,7 +46,7 @@ def sendemail(request):
     [email],
     fail_silently=False,
     html_message= "Here is the link to the sign up page.Email address should already be auto-filled!<br>"
-    "<a href=\"http://127.0.0.1:3000/register/\">Click Here!</a>"
+    "<a href=\"http://127.0.0.1:3000/register/?email="+email+"\">Click Here!</a>"
     )
     return Response({"Success":"True","email":email},status=status.HTTP_200_OK)
 
@@ -54,4 +55,12 @@ format — essential for carrying data stored in binary across channels.'''
 
 @api_view(['POST'])
 def register(request):
-    pass
+    if request.method == 'POST':
+        serializer = UserSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = User.objects.get(username = request.data['username'])
+        user.set_password(request.data['password'])
+        user.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
