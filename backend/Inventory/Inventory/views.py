@@ -36,7 +36,7 @@ def sendemail(request):
     html_message= "Here is the link to the sign up page.Email address should already be auto-filled!<br>"
     "<a href=\"http://127.0.0.1:3000/register?email="+str(base64.urlsafe_b64encode(email.encode()),encoding='utf-8')+"\">Click Here!</a>"
     )
-    return Response({"Success":"True","email":email},status=status.HTTP_200_OK)
+    return Response({"Success":"True"},status=status.HTTP_200_OK)
 
 '''Base64 is a binary to a text encoding scheme that represents binary data in an ASCII string 
 format — essential for carrying data stored in binary across channels.'''
@@ -44,8 +44,11 @@ format — essential for carrying data stored in binary across channels.'''
 @api_view(['POST'])
 def register(request):
     if request.method == 'POST':
+        #testing whether request.data is a dict..Yes
+        #print(request.data)
+        request.data['email'] = str(base64.urlsafe_b64decode(request.data['email'].encode()),encoding='utf-8')
         serializer = UserSerializer(data = request.data)
-        #email = str(base64.urlsafe_b64decode(request.data['email'].encode()),encoding='utf-8')
+        #print(request.data)
     if serializer.is_valid():
         serializer.save()
         user = User.objects.get(username = request.data['username'])

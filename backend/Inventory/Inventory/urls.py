@@ -26,5 +26,4 @@ urlpatterns = [
     path('v1/login/',views.login),
     path('v1/addcashier/',views.sendemail),
     path('v1/signup/',views.register)
-
 ]
