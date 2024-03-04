@@ -45,7 +45,7 @@ format — essential for carrying data stored in binary across channels.'''
 def register(request):
     if request.method == 'POST':
         #testing whether request.data is a dict..Yes
-        #print(request.data)
+        #print(request.data) -- Decoding Parameter
         request.data['email'] = str(base64.urlsafe_b64decode(request.data['email'].encode()),encoding='utf-8')
         serializer = UserSerializer(data = request.data)
         #print(request.data)
@@ -54,7 +54,7 @@ def register(request):
         user = User.objects.get(username = request.data['username'])
         user.set_password(request.data['password'])
         user.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response({"Registered":"Successfully","id":serializer.data['id'],"username":serializer.data['username']},status=status.HTTP_201_CREATED)
     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
