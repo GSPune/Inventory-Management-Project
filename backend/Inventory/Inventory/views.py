@@ -22,20 +22,7 @@ def login(request):
     return JsonResponse(serializer.data)
     #return Response(serializer.data)
 
-'''
-username = request.data['username']
-password = request.data['password']
 
-# Check if username and password are correct, returning User object if so
-user = authenticate(request, username=username, password=password)
-
-if user:
-    login(request, user)
-    serializer = UserSerializer(instance=user)
-    return Response({serializer.data})
-else:
-    return Response({"Details":"Not Found."},status=status.HTTP_404_NOT_FOUND)
-'''
 @api_view(['POST'])
 def sendemail(request):
     #email = request.data.get('email')
@@ -66,3 +53,19 @@ def register(request):
         user.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+'''
+username = request.data['username']
+password = request.data['password']
+
+# Check if username and password are correct, returning User object if so
+user = authenticate(request, username=username, password=password)
+
+if user:
+    login(request, user)
+    serializer = UserSerializer(instance=user)
+    return Response({serializer.data})
+else:
+    return Response({"Details":"Not Found."},status=status.HTTP_404_NOT_FOUND)
+'''
