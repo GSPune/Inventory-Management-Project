@@ -7,4 +7,4 @@ class Products(models.Model):
     Quantity = models.IntegerField()
     Units = models.CharField(max_length=100)
     Expiry_Date = models.DateField()
-    Date = models.DateField()
+    Date = models.DateField(auto_now=True)
