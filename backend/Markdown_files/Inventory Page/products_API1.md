@@ -6,7 +6,7 @@ POST /v1/products
 ```
 Content-Type : application/json
 ```
-[]: #(Input 1 for selecting category)
+
 ### Request Body
 ```
 []: #(Input 1 for selecting category)
