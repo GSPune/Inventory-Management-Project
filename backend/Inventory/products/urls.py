@@ -1,4 +1,7 @@
 from django.urls import path
 from . import views
 
-urlpatterns = []
+urlpatterns = [
+    path('add/',views.add_api),
+    path('view/',views.list_api)
+]
