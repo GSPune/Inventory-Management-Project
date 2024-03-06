@@ -21,4 +21,8 @@ def add_api(request):
 
 @api_view(['GET'])
 def list_api(request):
-    pass
+    if request.method == 'GET':
+        prod = Products.objects.all()
+        serializer = ProductSerializer(prod,many=True)
+        #return JsonResponse(serializer.data,safe=False)
+        return Response(serializer.data)
