@@ -8,7 +8,7 @@ class Products(models.Model):
     Units = models.CharField(max_length=64)
     Expiry_Date = models.DateField()
     Date = models.DateField(auto_now=True)
-    #Category = models.CharField(max_length=64) ...got to delete DB entries before running
+    Category = models.CharField(max_length=64)
 
     def __str__(self):
-        return f"{self.id}: {self.Product_name} , {self.Product_price} , {self.Quantity}"
+        return f"{self.id}: {self.Product_name} ,Price: {self.Product_price} , Quantity:{self.Quantity},Category:{self.Category}"

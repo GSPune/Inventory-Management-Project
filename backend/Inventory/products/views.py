@@ -14,7 +14,8 @@ def add_api(request):
         serializer = ProductSerializer(data = request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)#return success message
+        return Response({"Added":"Successfully","id":serializer.data['id'],"name":serializer.data['Product_name'],
+                         "price":serializer.data['Product_price'],"category":serializer.data['Category']},status=status.HTTP_201_CREATED)#return success message
     #else
     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
