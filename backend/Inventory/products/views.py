@@ -25,4 +25,15 @@ def list_api(request):
         prod = Products.objects.all()
         serializer = ProductSerializer(prod,many=True)
         #return JsonResponse(serializer.data,safe=False)
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+@api_view(['PUT'])
+def update_api(request):
+    if request.method == 'PUT':
+        prod = Products.objects.get(id = request.data['id'])
+        serializer = ProductSerializer(prod,data = request.data,partial = True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"Updated":"Successfully"},status=status.HTTP_201_CREATED)#return success message
+    #else
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
