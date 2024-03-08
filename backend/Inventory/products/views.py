@@ -37,3 +37,12 @@ def update_api(request):
         return Response({"Updated":"Successfully"},status=status.HTTP_201_CREATED)#return success message
     #else
     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def delete_api(request):
+    if request.method == 'DELETE':
+        prod = Products.objects.get(id = request.data['id'])
+        prod.delete()
+        return Response({"Deleted":"Successfully"},status=status.HTTP_204_NO_CONTENT)#return success message
+    #else
+    # return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
