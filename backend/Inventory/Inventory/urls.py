@@ -21,7 +21,7 @@ from rest_framework import routers, serializers, viewsets
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls), #admin inbuilt
     path('v1/products/',include("products.urls")),
     path('v1/login/',views.login),
     path('v1/addcashier/',views.sendemail),
