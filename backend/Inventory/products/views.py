@@ -4,7 +4,8 @@ from .serializers import ProductSerializer
 from .models import Products
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+# from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authentication import SessionAuthentication
 
 # Create your views here.
@@ -41,8 +42,12 @@ def update_api(request):
 @api_view(['DELETE'])
 def delete_api(request):
     if request.method == 'DELETE':
-        prod = Products.objects.get(id = request.data['id'])
+        try:
+            prod = Products.objects.get(id = request.data['id'])
+        except KeyError or ObjectDoesNotExist:
+            print("Either the product or entry doesn't exist.")
+            return Response({"Invalid":"ID"},status=status.HTTP_404_NOT_FOUND)
+        
         prod.delete()
         return Response({"Deleted":"Successfully"},status=status.HTTP_204_NO_CONTENT)#return success message
-    #else
-    # return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+         

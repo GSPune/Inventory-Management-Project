@@ -34,7 +34,7 @@ def sendemail(request):
     [email],
     fail_silently=False,
     html_message= "Here is the link to the sign up page.Email address should already be auto-filled!<br>"
-    "<a href=\"http://127.0.0.1:3000/register?email="+str(base64.urlsafe_b64encode(email.encode()),encoding='utf-8')+"\">Click Here!</a>"
+    "<a href=\"http://127.0.0.1:3001/register?email="+str(base64.urlsafe_b64encode(email.encode()),encoding='utf-8')+"\">Click Here!</a>"
     )
     return Response({"Success":"True"},status=status.HTTP_200_OK)
 
