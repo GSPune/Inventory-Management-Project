@@ -1,6 +1,7 @@
 from django.http import HttpResponse,JsonResponse
 from rest_framework import status,serializers
 from .serializers import ProductSerializer 
+from datetime import date
 from .models import Products
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -51,3 +52,18 @@ def delete_api(request):
         prod.delete()
         return Response({"Deleted":"Successfully"},status=status.HTTP_204_NO_CONTENT)#return success message
          
+@api_view(['POST','GET'])
+def expired(request):
+    if request.method == 'GET':
+        prod = Products.objects.filter(Expiry_Date__lte = date.today())
+        serializer = ProductSerializer(prod,many=True)
+        #return JsonResponse(serializer.data,safe=False)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+@api_view(['POST','GET'])
+def out(request):
+    if request.method == 'GET':
+        prod = Products.objects.filter(Quantity__lte = 1)
+        serializer = ProductSerializer(prod,many=True)
+        #return JsonResponse(serializer.data,safe=False)
+        return Response(serializer.data,status=status.HTTP_200_OK)
