@@ -63,7 +63,16 @@ def expired(request):
 @api_view(['POST','GET'])
 def out(request):
     if request.method == 'GET':
-        prod = Products.objects.filter(Quantity__lte = 1)
+        prod = Products.objects.filter(Quantity__lte = 0)
+        serializer = ProductSerializer(prod,many=True)
+        #return JsonResponse(serializer.data,safe=False)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+@api_view(['POST','GET'])
+def low(request):
+    if request.method == 'GET':
+        threshold = 3
+        prod = Products.objects.filter(Quantity__lte = threshold)
         serializer = ProductSerializer(prod,many=True)
         #return JsonResponse(serializer.data,safe=False)
         return Response(serializer.data,status=status.HTTP_200_OK)

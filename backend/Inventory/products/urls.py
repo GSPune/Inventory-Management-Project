@@ -8,4 +8,5 @@ urlpatterns = [
     path('delete/',views.delete_api),
     path('alerts/expired',views.expired),
     path('alerts/out',views.out),
+    path('alerts/low',views.low)
 ]
