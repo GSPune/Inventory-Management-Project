@@ -34,7 +34,7 @@ def sendemail(request):
     [email],
     fail_silently=False,
     html_message= "Here is the link to the sign up page.Email address should already be auto-filled!<br>"
-    "<a href=\"http://127.0.0.1:3001/register?email="+str(base64.urlsafe_b64encode(email.encode()),encoding='utf-8')+"\">Click Here!</a>"
+    "<a href=\"http://127.0.0.1:3000/register?email="+str(base64.urlsafe_b64encode(email.encode()),encoding='utf-8')+"\">Click Here!</a>"
     )
     return Response({"Success":"True"},status=status.HTTP_200_OK)
 
@@ -47,6 +47,7 @@ def register(request):
         #testing whether request.data is a dict..Yes
         #print(request.data) -- Decoding Parameter
         request.data['email'] = str(base64.urlsafe_b64decode(request.data['email'].encode()),encoding='utf-8')
+        #print(request.data['username'])
         serializer = UserSerializer(data = request.data)
         #print(request.data)
     if serializer.is_valid():
@@ -58,6 +59,13 @@ def register(request):
     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['POST','GET'])
+def list_cashiers(request):
+    if request.method == 'GET':
+        cashiers = User.objects.filter(is_superuser = 0)
+        serializer = UserSerializer(cashiers,many=True)
+        #return JsonResponse(serializer.data,safe=False)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 '''
 username = request.data['username']
 password = request.data['password']
