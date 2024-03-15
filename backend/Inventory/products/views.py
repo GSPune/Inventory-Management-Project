@@ -76,3 +76,19 @@ def low(request):
         serializer = ProductSerializer(prod,many=True)
         #return JsonResponse(serializer.data,safe=False)
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+
+
+
+# # Create your views here.
+# @api_view(['POST'])
+# def add_customer(request):
+#     if request.method == 'POST':
+#         #Customer Serializer TO BE CREATED!
+#         serializer = CustomerSerializer(data = request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response({"Added":"Successfully","id":serializer.data['id'],"name":serializer.data['Product_name']}
+#                         ,status=status.HTTP_201_CREATED)#return success message
+#     #else
+#     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
