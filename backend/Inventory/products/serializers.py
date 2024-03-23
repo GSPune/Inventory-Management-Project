@@ -11,6 +11,8 @@ class ProductSerializer(serializers.ModelSerializer):
     def create(self,validate_data):
         return Products.objects.create(**validate_data)
     
+    #for updating a product...instance refers to the the old data in DB to be updated
+    #validated data is the new data from user
     def update(self,instance,validated_data):
         instance.Product_name = validated_data.get('Product_name',instance.Product_name)
         instance.Product_price = validated_data.get('Product_price',instance.Product_price)

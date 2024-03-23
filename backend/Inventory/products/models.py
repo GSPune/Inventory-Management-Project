@@ -6,7 +6,7 @@ class Products(models.Model):
     Product_price = models.DecimalField(max_digits=19, decimal_places=5)
     Quantity = models.IntegerField()
     Units = models.CharField(max_length=64)
-    Expiry_Date = models.DateField()
+    Expiry_Date = models.DateField(blank=True,null=True)
     Date = models.DateField(auto_now=True)
     Category = models.CharField(max_length=64)
 
