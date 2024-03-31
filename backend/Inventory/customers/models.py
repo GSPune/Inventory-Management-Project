@@ -8,4 +8,4 @@ class Customer(models.Model):
     Mobile = models.CharField(max_length=12)
 
     def __str__(self):
-        return f"{self.id}: {self.Name} ,Email: {self.Email}"
+        return f"{self.id}: Name : {self.Name} ,Email : {self.Email}"
