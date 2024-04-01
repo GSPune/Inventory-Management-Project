@@ -3,9 +3,10 @@ from .models import Customer
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta(object):
-        # model = Customer
-        #fields = ['id','Name', 'Email', 'Mobile']
-        fields = ['all']
+        model = Customer
+        fields = '__all__'
+        # fields = ['id','Name', 'Email', 'Mobile']
+       
 
     def create(self,validate_data):
         return Customer.objects.create(**validate_data)

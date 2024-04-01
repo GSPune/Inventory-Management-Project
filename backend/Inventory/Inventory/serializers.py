@@ -17,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id','username','is_superuser','email']
         #fields = ['id','username','password','email']
-        #fields = ['all']
+        #fields = '__all__'
 
     def create(self,validate_data):
         return User.objects.create(**validate_data)
