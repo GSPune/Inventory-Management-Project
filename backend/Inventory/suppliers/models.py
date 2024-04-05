@@ -1,4 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+#changing the User table email field
+User._meta.get_field('email')._unique = True
+#delete the duplicate email entries first before migration!!!
 
 # Create your models here.
 class Supplier(models.Model):
