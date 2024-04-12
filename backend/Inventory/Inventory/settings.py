@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'products',
     'customers',
     'suppliers',
+    'billing',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',

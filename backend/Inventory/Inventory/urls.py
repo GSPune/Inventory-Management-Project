@@ -25,6 +25,7 @@ urlpatterns = [
     path('v1/products/',include("products.urls")),
     path('v1/customers/',include("customers.urls")),
     path('v1/suppliers/',include("suppliers.urls")),
+    path('v1/billing/',include("billing.urls")),
     path('v1/login/',views.login),
     path('v1/addcashier/',views.sendemail),
     path('v1/signup/',views.register),
