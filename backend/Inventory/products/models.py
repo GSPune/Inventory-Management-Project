@@ -1,4 +1,5 @@
 from django.db import models
+# from suppliers.models import Supplier
 
 # Create your models here.
 class Products(models.Model):
