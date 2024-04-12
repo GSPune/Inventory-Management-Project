@@ -19,3 +19,12 @@ def add_customer(request):
                         ,status=status.HTTP_201_CREATED)#return success message
     #else
     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def list_api(request):
+    if request.method == 'GET':
+        customers = Customer.objects.all() #database-abstraction API that lets you create, retrieve, update and delete objects
+        serializer = CustomerSerializer(customers,many=True)
+        #return JsonResponse(serializer.data,safe=False)
+        return Response(serializer.data,status=status.HTTP_200_OK)
