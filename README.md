@@ -2,5 +2,5 @@
 The inventory management software is designed with the aim of providing convenience store employees and owners with
 a much easier way to keep track of and manage all stock in hand.
 ```
-Made with React + Django.
+Made with React + Django & MySQL + Django Rest Framework(for Rest APIs).
 ```
