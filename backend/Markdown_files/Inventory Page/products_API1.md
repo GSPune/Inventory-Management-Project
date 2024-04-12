@@ -6,6 +6,7 @@ POST /v1/products
 ```
 Content-Type : application/json
 ```
+
 ### Request Body
 ```
 []: #(Input 1 for selecting category)
@@ -20,9 +21,11 @@ body
 {
     "count" : Number,
     "results" : [
-        {"product_no" : Number,
+        {"product_id" : Number,
         "product_name" : "String",
         "product_qty" : Number,
+        "units" : "String",
+        "category" : "String",
         "product_price" : Number,
         "expiry_date": "String"}
     ]

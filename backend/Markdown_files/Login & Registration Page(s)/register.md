@@ -1,7 +1,7 @@
-## Login
+## Sign Up
 <!-- Test change -->
 ```
-POST /v1/login
+POST /v1/signup
 ```
 ### Request Headers
 ```
@@ -11,20 +11,17 @@ Content-Type : application/json
 ```
 {
     "Username": "String",
-    "Password": "String"
+    "Password": "String",
+    "Confirm_Password":"String",
+    "Email":"String"
 }
 ```
+<!-- Redirect to ("/") -->
 ### Response
 ```
 200 - Success
-Body
-{
-    "user_id": Number,
-    "username" : "String",  
-}
 
-<!-- Redirect to ("/") -->
-400 - Bad Request - Incorrect Email/Password
+400 - Bad Request - Invalid Email/Password
 403 - Forbidden
 404 - Not Found
 500 - Internal Server Error
