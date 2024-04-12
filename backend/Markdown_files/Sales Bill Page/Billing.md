@@ -11,26 +11,29 @@ Content-Type : application/json
 {
     "Date":"String",
     "Customer_Name":"String",   
-    "Input_Products":[
+    "Input_Products":
+[
     {
-        "Product_Names":"String",      
-        "Quantity":Number,
-        "Qty":Number }
-    ]
+        "Product_Name":"String",      
+        "Quantity":Number
+    }
+]
     
 }
 ```
 ### Response
 ```
-200 - Success
+200 - OK,Success
+201 - Created
 Body
 {
     "Customer_Name":"String",
     "Mobile No": Number,
-    "Bill_No":Number, 
-    "Output_Products":[
+    "Bill_No":Number,
+    "Date":"String",
+    "Bought_Products":[
     {
-        "Sr_No":Number , 
+        "Product_name":"String", 
         "Product_id":Number,
         "Quantity":Number,
         "Price":Number,  
