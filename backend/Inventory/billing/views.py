@@ -27,4 +27,5 @@ def customers(request):
     
 @api_view(['POST','GET'])
 def sales_bill(request):
+    #Just testing whether a push can be made to the main branch
     pass
