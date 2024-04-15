@@ -24,3 +24,7 @@ def customers(request):
         serializer = CustomerSerializer(customers,many=True)
         #return JsonResponse(serializer.data,safe=False)
         return Response(serializer.data,status=status.HTTP_200_OK)
+    
+@api_view(['POST','GET'])
+def sales_bill(request):
+    pass
