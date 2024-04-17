@@ -104,22 +104,6 @@ const Cashier = () => {
     }
   };
 
-  // const addCashier = async () => {
-  //   try {
-  //     // Send email to backend
-  //     await axios.post("/api/send-email", newCashier); // Replace "/api/send-email" with your backend API endpoint for sending emails
-  //     // Once email is sent, add cashier as usual
-  //     await axios.post("/cashiers", newCashier); // Replace with your backend API endpoint for adding cashiers
-  //     await fetchCashiers();
-  //     setNewCashier({ name: "", mobileNumber: "", email: "" });
-  //     setShowPopup(false);
-  //     Swal.fire("Success!", "Cashier added and email sent.", "success");
-  //   } catch (error) {
-  //     console.error("Error adding cashier or sending email:", error);
-  //     Swal.fire("Error!", "An error occurred.", "error");
-  //   }
-  // };
-
   // const deleteCashier = async (id) => {
   //   try {
   //     await axios.delete(`/cashiers/${id}`); // Replace with your backend API endpoint
@@ -155,19 +139,6 @@ const Cashier = () => {
   //     ...newCashier,
   //     [name]: value,
   //   });
-  // };
-
-  // useEffect(() => {
-  //   fetchCashiers();
-  // }, []);
-
-  // const fetchCashiers = async () => {
-  //   try {
-  //     const response = await axios.get(LIST_CASHIER_URL);
-  //     setCashiers(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching cashiers:", error);
-  //   }
   // };
 
   return (
