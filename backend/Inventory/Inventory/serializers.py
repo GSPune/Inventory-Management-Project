@@ -20,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
         #fields = '__all__'
 
     def create(self,validate_data):
+        #actually not needed for model serializer
         return User.objects.create(**validate_data)
 
 

@@ -16,3 +16,9 @@ class OrdersInSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders_In
         fields = '__all__'
+        read_only_fields = ['Timestamp']
+
+class OrderProductsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order_Products
+        fields = '__all__'
