@@ -4,11 +4,11 @@ from .models import *
 
 
 class Orders_In_Admin(admin.ModelAdmin):
-    list_display = ("id","Customer_id","Date")
+    list_display = ("id","Customer","Timestamp","Items_Bought")
 # Register your models here.
 admin.site.register(Orders_In,Orders_In_Admin)
 
 class Order_Product_Admin(admin.ModelAdmin):
-    list_display = ("id","Order_id","Product_id","Quantity")
+    list_display = ("id","Order","Product","Quantity")
 # Register your models here.
 admin.site.register(Order_Products,Order_Product_Admin)
