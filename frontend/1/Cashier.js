@@ -17,13 +17,7 @@ const LIST_CASHIER_URL = "http://192.168.129.25:8000/v1/listcashiers/";
 const Cashier = () => {
   // const { setAuth } = useContext(AuthContext);
   const history = useNavigate();
-
-  // const [newCashier, setNewCashier] = useState({
-
-  //   name: "",
-  //   mobileNumber: "",
-  //   email: "",
-  // });
+  
   const [cashiers, setCashiers] = useState([]);
   const [inpval, setInpval] = useState({
     username: "",

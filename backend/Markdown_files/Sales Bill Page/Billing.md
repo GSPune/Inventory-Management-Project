@@ -1,16 +1,17 @@
 ## Bill
 
-POST /v1/billing/sales_bill
+POST /v1/billing/new-bill
 
 ### Request Headers
 
 Content-Type : application/json
 
+<!-- Json array of products -->
 ### Request Body
 ```
 {
     "Customer_id":Number,   
-    <!-- Json array of products -->
+    
     "Bought_Products":
     [
         {
