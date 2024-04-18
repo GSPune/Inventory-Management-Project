@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { TextField } from "@mui/material";
 import { Button as MuiButton } from "@mui/material";
 import axios from "../../api/axios";
-// import AuthContext from "../context/AuthProvider";
 import "./cashier.css";
 import Navbar from "../Navbar";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
@@ -10,18 +9,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Swal from "sweetalert2";
 import { NavLink, useNavigate } from "react-router-dom";
 import Home from "../Home";
+import BASE_URL from "../../config";
+import UpdateCashier from "./UpdateCashier";
 
-const CASHIER_URL = "http://192.168.129.25:8000/v1/addcashier/";
-const LIST_CASHIER_URL = "http://192.168.129.25:8000/v1/listcashiers/";
+// const BASE_URL = "http://192.168.177.25:8000/v1/";
+const CASHIER_URL = BASE_URL + "addcashier/";
+const LIST_CASHIER_URL = BASE_URL + "listcashiers/";
+const DELETE_CASHIER_URL = BASE_URL + "deletecashiers/";
 
 const Cashier = () => {
-  // const { setAuth } = useContext(AuthContext);
   const history = useNavigate();
-  
+
+  // const [newCashier, setNewCashier] = useState({
+
+  //   name: "",
+  //   mobileNumber: "",
+  //   email: "",
+  // });
   const [cashiers, setCashiers] = useState([]);
   const [inpval, setInpval] = useState({
     username: "",
-    // mobileNumber: "",
     email: "",
   });
 
@@ -39,6 +46,7 @@ const Cashier = () => {
 
   const [showPopup, setShowPopup] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [showUsernameInput, setShowUsernameInput] = useState(false);
 
   const addData = async (e) => {
     e.preventDefault();
@@ -48,10 +56,7 @@ const Cashier = () => {
 
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regex.test(email)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        email: "Please enter a valid email address",
-      }));
+      setErrors({ email: "Please enter a valid email address" });
     } else {
       setErrors("");
     }
@@ -69,52 +74,64 @@ const Cashier = () => {
             if (response.status === 200) {
               alert("Email sent successfully...!!!");
               setShowPopup(false);
-              // Send email
-              // sendEmail(email);
-              // history("/cashier");
             }
           });
-      } catch (errors) {
-        if (!errors?.response) {
-          setErrors("No server response");
-        } else {
-          setErrors("Failed");
-        }
+      } catch (error) {
+        console.error("Error adding cashier:", error);
       }
+      // catch (errors) {
+      //   if (!errors?.response) {
+      //     setErrors("No server response");
+      //   } else {
+      //     setErrors("Failed");
+      //   }
+      // }
     }
   };
 
   useEffect(() => {
-    // Fetch cashier data from backend when component mounts
+    // Fetch cashier data from backend
     fetchCashiers();
   }, []);
 
   const fetchCashiers = async () => {
     try {
-      const response = await axios.get(LIST_CASHIER_URL); // Replace with your backend API endpoint
+      const response = await axios.get(LIST_CASHIER_URL); //
       setCashiers(response.data);
     } catch (error) {
       console.error("Error fetching cashiers:", error);
     }
   };
 
-  // const deleteCashier = async (id) => {
-  //   try {
-  //     await axios.delete(`/cashiers/${id}`); // Replace with your backend API endpoint
-  //     await fetchCashiers();
-  //     Swal.fire(
-  //       "Deleted!",
-  //       "Cashier data has been deleted successfully.",
-  //       "success"
-  //     );
-  //   } catch (error) {
-  //     console.error("Error deleting cashier:", error);
-  //   }
-  // };
+  const deleteCashier = async (id) => {
+    try {
+      await Swal.fire({
+        title: "Are you sure?",
+        text: "Do you really want to delete this cashier?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await axios.delete(DELETE_CASHIER_URL, { data: { id } });
+          await fetchCashiers();
+          Swal.fire(
+            "Deleted!",
+            "Cashier data has been deleted successfully.",
+            "success!"
+          );
+        }
+      });
+    } catch (error) {
+      console.error("Error deleting cashier:", error);
+    }
+  };
 
   // const updateCashier = async (id) => {
   //   try {
-  //     await axios.put(`/cashiers/${id}`, newCashier); // Replace with your backend API endpoint
+  //     await axios.put(`/cashiers/${id}`, newCashier); //
   //     await fetchCashiers();
   //     setEditingIndex(null);
   //     setShowPopup(false);
@@ -139,6 +156,7 @@ const Cashier = () => {
     <>
       <Navbar />
       <Home />
+      <UpdateCashier />
       <div className="body">
         <div className="addbtn">
           <button
@@ -152,24 +170,8 @@ const Cashier = () => {
         {showPopup && (
           <div className="popup">
             <div className="popup-inner">
-              <h2 className="addmailtext">
-                Add Email
-                {/* {editingIndex !== null ? "Update Cashier" : "Add Cashier"} */}
-              </h2>
-              {/* <input
-                type="text"
-                name="name"
-                value={newCashier.name}
-                onChange={handleInputChange}
-                placeholder="Cashier Name"
-              />
-              <input
-                type="tel"
-                name="mobileNumber"
-                value={newCashier.mobileNumber}
-                onChange={handleInputChange}
-                placeholder="Mobile Number"
-              /> */}
+              <h2 className="addmailtext">Add Cashier</h2>
+
               <TextField
                 className="email-field"
                 variant="filled"
@@ -189,6 +191,19 @@ const Cashier = () => {
                 </span>
               )}
 
+              {showUsernameInput && (
+                <TextField
+                  className="username-field"
+                  variant="filled"
+                  name="username"
+                  required
+                  autoFocus
+                  value={inpval.username}
+                  onChange={getData}
+                  label="Username"
+                />
+              )}
+
               <div className="btncontainer">
                 <MuiButton
                   className="send-email-btn"
@@ -198,14 +213,9 @@ const Cashier = () => {
                   onClick={addData}
                   type="submit"
                 >
-                  {/* // editingIndex !== null
-                    //   ? () => updateCashier(cashiers[editingIndex].id)
-                    //   : addCashier */}
-                  Send Email
-                  {/* {editingIndex !== null ? "Update" : "Send Email"} */}
+                  Submit
                 </MuiButton>
-                {/* </div>
-              <div className="clsbtn-container"> */}
+
                 <MuiButton
                   className="close"
                   variant="contained"
@@ -214,6 +224,7 @@ const Cashier = () => {
                   onClick={() => {
                     setEditingIndex(null);
                     setShowPopup(false);
+                    setShowUsernameInput(false);
                   }}
                 >
                   {editingIndex !== null ? "Cancel" : "Close"}
@@ -229,7 +240,6 @@ const Cashier = () => {
               <tr>
                 <th>Sr no</th>
                 <th>Name</th>
-                {/* <th>Mobile no</th> */}
                 <th>Email</th>
                 <th>Action</th>
               </tr>
@@ -239,22 +249,25 @@ const Cashier = () => {
                 <tr key={cashier.id}>
                   <td>{index + 1}</td>
                   <td>{cashier.username}</td>
-                  {/* <td>{cashier.mobileNumber}</td> */}
                   <td>{cashier.email}</td>
-                  {/* <td>
+                  <td>
                     <button
+                      className="update"
                       onClick={() => {
-                        setInpval(cashier);
-                        setEditingIndex(index);
                         setShowPopup(true);
+                        setShowUsernameInput(true);
                       }}
                     >
                       Update
                     </button>
-                    <button onClick={() => deleteCashier(cashier.id)}>
+                    <button
+                      className="delete"
+                      onClick={() => deleteCashier(cashier.id)}
+                    >
                       Delete
                     </button>
-                  </td> */}
+                    {/* <button2 onClick={handleDelete}>Delete</button2> */}
+                  </td>
                 </tr>
               ))}
             </tbody>
