@@ -134,6 +134,7 @@ const Cashier = () => {
   //     [name]: value,
   //   });
   // };
+
   return (
     <>
       <Navbar />
