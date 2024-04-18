@@ -28,6 +28,8 @@ urlpatterns = [
     path('v1/billing/',include("billing.urls")),
     path('v1/login/',views.login),
     path('v1/addcashier/',views.sendemail),
-    path('v1/signup/',views.register),
-    path('v1/listcashiers/',views.list_cashiers)
+    path('v1/signup/',views.register),#add cashiers!
+    path('v1/listcashiers/',views.list_cashiers),
+    path('v1/deletecashiers/',views.delete_api),
+    path('v1/updatecashiers/',views.update_api),
 ]

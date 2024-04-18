@@ -5,6 +5,7 @@ from .serializers import SupplierSerializer
 from .models import Supplier
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 @api_view(['POST'])
@@ -26,3 +27,28 @@ def list_api(request):
         serializer = SupplierSerializer(suppliers,many=True)
         #return JsonResponse(serializer.data,safe=False)
         return Response(serializer.data,status=status.HTTP_200_OK)
+    
+@api_view(['PUT'])
+def update_api(request):
+    if request.method == 'PUT':
+        prod = Supplier.objects.get(id = request.data['id'])
+        serializer = SupplierSerializer(prod,data = request.data,partial = True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"Updated":"Successfully"},status=status.HTTP_201_CREATED)#return success message
+    #else
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+def delete_api(request):
+    if request.method == 'DELETE':
+        try:
+            sup = Supplier.objects.get(id = request.data['id'])
+        except KeyError or ObjectDoesNotExist:
+            print("Either the product or entry doesn't exist.")
+            return Response({"Invalid":"ID"},status=status.HTTP_404_NOT_FOUND)
+        
+        sup.delete()
+        return Response({"Deleted":"Successfully"},status=status.HTTP_204_NO_CONTENT)#return success message
+         

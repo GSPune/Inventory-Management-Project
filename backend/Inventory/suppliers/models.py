@@ -8,9 +8,10 @@ User._meta.get_field('email')._unique = True
 # Create your models here.
 class Supplier(models.Model):
     Name = models.CharField(max_length=64)
+    Company = models.CharField(max_length=64,blank=True,null=True)
     # Email = models.EmailField(max_length=254, **options)
     Email = models.EmailField(max_length=254,unique=True)
     Mobile = models.CharField(max_length=12)
 
     def __str__(self):
-        return f"{self.id}: Name : {self.Name} ,Email : {self.Email}"
+        return f"{self.id}: Name : {self.Name} ,Email : {self.Email},Company: {self.Company}"

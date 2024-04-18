@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 from rest_framework.authentication import SessionAuthentication
+from django.core.exceptions import ObjectDoesNotExist
 import base64
 
 @api_view(['POST'])
@@ -66,6 +67,28 @@ def list_cashiers(request):
         serializer = UserSerializer(cashiers,many=True)
         #return JsonResponse(serializer.data,safe=False)
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def delete_api(request):
+    if request.method == 'DELETE':
+        try:
+            u = User.objects.get(id = request.data['id'])
+        except KeyError or ObjectDoesNotExist:
+            print("Either the user or entry doesn't exist.")
+            return Response({"Invalid":"ID"},status=status.HTTP_404_NOT_FOUND)  
+        u.delete()
+        return Response({"Deleted":"Successfully"},status=status.HTTP_204_NO_CONTENT)#return success message
+    
+@api_view(['PUT'])
+def update_api(request):
+    if request.method == 'PUT':
+        prod = User.objects.get(id = request.data['id'])
+        serializer = UserSerializer(prod,data = request.data,partial = True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"Updated":"Successfully"},status=status.HTTP_201_CREATED)#return success message
+    #else
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 '''
 username = request.data['username']
 password = request.data['password']
