@@ -4,7 +4,7 @@ from .models import *
 
 
 class Orders_In_Admin(admin.ModelAdmin):
-    list_display = ("id","Customer","Timestamp","Items_Bought")
+    list_display = ("id","Customer","Timestamp","Items_Bought","Total")
 # Register your models here.
 admin.site.register(Orders_In,Orders_In_Admin)
 
