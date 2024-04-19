@@ -76,7 +76,11 @@ def delete_api(request):
         except KeyError or ObjectDoesNotExist:
             print("Either the user or entry doesn't exist.")
             return Response({"Invalid":"ID"},status=status.HTTP_404_NOT_FOUND)  
-        u.delete()
+        #Ensure that admin is not deleted!
+        if u.is_superuser == 0:
+            u.delete()
+        else:
+            return Response({"Invalid":"ID"},status=status.HTTP_404_NOT_FOUND)
         return Response({"Deleted":"Successfully"},status=status.HTTP_204_NO_CONTENT)#return success message
     
 @api_view(['PUT'])

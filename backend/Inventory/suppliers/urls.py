@@ -3,5 +3,7 @@ from . import views
 
 urlpatterns = [
     path('add/',views.add_supplier),
-    path('list/',views.list_api)
+    path('list/',views.list_api),
+    path('update/',views.update_api),
+    path('delete/',views.delete_api),
 ]
