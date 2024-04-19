@@ -4,17 +4,24 @@ from products.serializers import ProductSerializer
 from customers.serializers import CustomerSerializer
 from .models import Products,Customer
 from .serializers import *
+from datetime import date
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from decimal import *
+
+import reportlab
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import Table,TableStyle
+from reportlab.lib import colors
 # Create your views here.
 
 @api_view(['GET'])
 def products(request):
     #Check for out of stock products
     if request.method == 'GET':
-        prod = Products.objects.filter(Quantity__gt = 0)
+        prod = Products.objects.filter(Quantity__gt = 0).filter(Expiry_Date__gte = date.today())
         serializer = ProductSerializer(prod,many=True)
         #return JsonResponse(serializer.data,safe=False)
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -55,10 +62,32 @@ def sales_bill(request):
         order_summary.update({"Customer":request.data['Customer_id'],"Total":round(total_amt,3),"Items_Bought":count})
         serializer = OrdersInSerializer(data = order_summary)
         if serializer.is_valid():
-            serializer.save()
+            instance = serializer.save()
+            # When you call serializer.save(), it returns the saved object instance.
+            if not order_products(instance,request.data['Bought_Products']):
+                return Response({"Error":"In Products Data"},status=status.HTTP_400_BAD_REQUEST)
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         #else
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
+def order_products(model_object,products_info):
+    flag = True
+    ID = model_object.id
+    for product in products_info:
+        qty = product['Quantity']
+        prod_id = product['Product_id']
+        order_products = {}
+        order_products.update({"Order":ID,"Product":prod_id,"Quantity":qty})
+        serializer = OrderProductsSerializer(data = order_products)
+        if serializer.is_valid():
+            serializer.save()
+            # return Response(serializer.data,status=status.HTTP_201_CREATED)
+        else:
+            flag = False
+            break
+    return flag
 
+
+def download_pdf(self,request,queryset):
+    pass
     

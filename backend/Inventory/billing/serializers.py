@@ -22,3 +22,6 @@ class OrderProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order_Products
         fields = '__all__'
+
+# ModelSerializer automatically generates .create() and .update() methods based on the 
+# model definition.
