@@ -13,11 +13,15 @@ const UPDATE_CASHIER_URL = BASE_URL + "cashier/update/";
 const UpdateCashier = (cashier) => {
   const [showPopup, setShowPopup] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [cashiers, setCashiers] = useState([]);
+  const [showUsernameInput, setShowUsernameInput] = useState(false);
 
   const [inpval, setInpval] = useState({
     username: "",
     email: "",
   });
+
+  // var currentCashierID = "";
 
   const [errors, setErrors] = useState({});
 
@@ -32,8 +36,12 @@ const UpdateCashier = (cashier) => {
   };
 
   const handleUpdate = async (e) => {
-    e.preventDefault();
+    // const handleUpdate = async (cashier) => {
+    e.preventDefault(); //to prevent the form from reloading the page.
     const { username, email } = inpval;
+
+    //   currentCashierID = cashier.id;
+    //  console.log(cashier.id);
 
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regex.test(email)) {
@@ -44,6 +52,7 @@ const UpdateCashier = (cashier) => {
     }
 
     if (Object.keys(errors).length === 0) {
+      // if(cashier.id == ''){
       try {
         const response = axios.put(
           UPDATE_CASHIER_URL,
@@ -62,7 +71,7 @@ const UpdateCashier = (cashier) => {
         }
       }
     }
-
+    //}
     return (
       <>
         {showPopup && (
@@ -108,9 +117,10 @@ const UpdateCashier = (cashier) => {
                   color="primary"
                   size="large"
                   onClick={handleUpdate}
+                  // onClick={handleUpdate(cashier)}
                   type="submit"
                 >
-                  Submit
+                  Update
                 </MuiButton>
 
                 <MuiButton
@@ -129,6 +139,46 @@ const UpdateCashier = (cashier) => {
             </div>
           </div>
         )}
+
+        <div className="border-box">
+          <table className="table table-bordered">
+            <thead className="bg-dark text-white">
+              <tr>
+                <th>Sr no</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cashiers.map((cashier, index) => (
+                <tr key={cashier.id}>
+                  <td>{index + 1}</td>
+                  <td>{cashier.username}</td>
+                  <td>{cashier.email}</td>
+                  <td>
+                    <button
+                      className="update"
+                      onClick={() => {
+                        setShowPopup(true);
+                        setShowUsernameInput(true);
+                      }}
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="delete"
+                      // onClick={() => deleteCashier(cashier.id)}
+                    >
+                      Delete
+                    </button>
+                    {/* <button2 onClick={handleDelete}>Delete</button2> */}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </>
     );
   };
