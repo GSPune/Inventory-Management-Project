@@ -1,4 +1,4 @@
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse,JsonResponse,FileResponse
 from rest_framework import status,serializers
 from products.serializers import ProductSerializer 
 from customers.serializers import CustomerSerializer
@@ -10,8 +10,9 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from decimal import *
 
-import reportlab
+import reportlab,io
 from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import Table,TableStyle
 from reportlab.lib import colors
@@ -88,6 +89,6 @@ def order_products(model_object,products_info):
     return flag
 
 
-def download_pdf(self,request,queryset):
+def generate_pdf(self,request,queryset):
     pass
     
