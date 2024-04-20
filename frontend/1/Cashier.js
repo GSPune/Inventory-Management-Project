@@ -10,12 +10,12 @@ import Swal from "sweetalert2";
 import { NavLink, useNavigate } from "react-router-dom";
 import Home from "../Home";
 import BASE_URL from "../../config";
-import UpdateCashier from "./UpdateCashier";
+// import UpdateCashier from "./UpdateCashier";
 
-// const BASE_URL = "http://192.168.177.25:8000/v1/";
 const CASHIER_URL = BASE_URL + "addcashier/";
 const LIST_CASHIER_URL = BASE_URL + "listcashiers/";
 const DELETE_CASHIER_URL = BASE_URL + "deletecashiers/";
+const UPDATE_CASHIER_URL = BASE_URL + "cashier/update/";
 
 const Cashier = () => {
   const history = useNavigate();
@@ -113,6 +113,7 @@ const Cashier = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
       }).then(async (result) => {
         if (result.isConfirmed) {
           await axios.delete(DELETE_CASHIER_URL, { data: { id } });
@@ -121,6 +122,12 @@ const Cashier = () => {
             "Deleted!",
             "Cashier data has been deleted successfully.",
             "success!"
+          );
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire(
+            "Cancelled",
+            "Cashier deletion has been cancelled.",
+            "error"
           );
         }
       });
@@ -152,11 +159,63 @@ const Cashier = () => {
   //   });
   // };
 
+  const handleUpdateCashier = (index) => {
+    // Set the newCustomer state to the customer being edited
+    setInpval(cashiers[index]);
+    setEditingIndex(index);
+    setShowPopup(true);
+  };
+
+  const handleUpdate = async (index) => {
+    const updatedCashier = [...cashiers];
+    updatedCashier[editingIndex] = inpval;
+    setCashiers(updatedCashier);
+    setEditingIndex(null);
+    setShowPopup(false);
+    // const handleUpdate = async (cashier) => {
+    //e.preventDefault(); //to prevent the form from reloading the page.
+    const { username, email } = inpval;
+
+    //   currentCashierID = cashier.id;
+    //  console.log(cashier.id);
+
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(email)) {
+      setErrors({ email: "Please enter a valid email address" });
+      return; // exit if there are validation errors
+    } else {
+      setErrors({});
+    }
+
+    if (Object.keys(errors).length === 0) {
+      // if(cashier.id == ''){
+      try {
+        const response = axios.put(
+          UPDATE_CASHIER_URL,
+          JSON.stringify({ username, email })
+        );
+        console.log(response.data);
+        if (response.status === 200) {
+          alert("Cashier updated successfully...!!!");
+          setShowPopup(false);
+        }
+      } catch (errors) {
+        if (!errors?.response) {
+          setErrors("No server response");
+        } else {
+          setErrors("Failed");
+        }
+      }
+    }
+  };
+
   return (
     <>
       <Navbar />
       <Home />
-      <UpdateCashier />
+
+      {/* <UpdateCashier /> */}
+
       <div className="body">
         <div className="addbtn">
           <button
@@ -170,7 +229,11 @@ const Cashier = () => {
         {showPopup && (
           <div className="popup">
             <div className="popup-inner">
-              <h2 className="addmailtext">Add Cashier</h2>
+              {/* <h2 className="addmailtext">Add Cashier</h2> */}
+
+              <h2>
+                {editingIndex !== null ? "Update Cashier" : "Add Cashier"}
+              </h2>
 
               <TextField
                 className="email-field"
@@ -210,10 +273,13 @@ const Cashier = () => {
                   variant="contained"
                   color="primary"
                   size="large"
-                  onClick={addData}
+                  // onClick={addData}
+                  onClick={editingIndex !== null ? handleUpdate : addData}
                   type="submit"
                 >
-                  Submit
+                  {editingIndex !== null ? "Update" : "Send Email"}
+
+                  {/* Submit */}
                 </MuiButton>
 
                 <MuiButton
@@ -254,7 +320,8 @@ const Cashier = () => {
                     <button
                       className="update"
                       onClick={() => {
-                        setShowPopup(true);
+                        handleUpdateCashier(index);
+                        // setShowPopup(true);
                         setShowUsernameInput(true);
                       }}
                     >
