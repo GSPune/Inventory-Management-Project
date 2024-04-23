@@ -86,8 +86,9 @@ def delete_api(request):
 @api_view(['PUT'])
 def update_api(request):
     if request.method == 'PUT':
-        prod = User.objects.get(id = request.data['id'])
-        serializer = UserSerializer(prod,data = request.data,partial = True)
+        print(request.data)
+        cashier = User.objects.get(id = request.data['id'])
+        serializer = UserSerializer(cashier,data = request.data,partial = True)
     if serializer.is_valid():
         serializer.save()
         return Response({"Updated":"Successfully"},status=status.HTTP_201_CREATED)#return success message

@@ -48,7 +48,7 @@ def delete_api(request):
         try:
             c = Customer.objects.get(id = request.data['id'])
         except KeyError or ObjectDoesNotExist:
-            print("Either the product or entry doesn't exist.")
+            print("Either the customer or entry doesn't exist.")
             return Response({"Invalid":"ID"},status=status.HTTP_404_NOT_FOUND)
         
         c.delete()
