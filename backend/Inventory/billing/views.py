@@ -88,7 +88,32 @@ def order_products(model_object,products_info):
             break
     return flag
 
+@api_view(['GET'])
+# def generate_pdf(self,request,queryset):
+def generate_pdf(request):
+    buf = io.BytesIO()
+    #create a canvas
+    c = canvas.Canvas(buf,pagesize=letter,bottomup=0)
+    #Create a text object
+    textob =  c.beginText()
+    textob.setTextOrigin(inch,inch)
+    textob.setFont("Helvetica",14)
 
-def generate_pdf(self,request,queryset):
-    pass
+    #Add some lines of text
+    lines = [
+        "This is line 1",
+        "This is line 2",
+        "This is line 3",
+    ]
+
+    for line in lines:
+        textob.textLine(line)
+    
+    c.drawText(textob)
+    c.showPage()
+    c.save()    
+    buf.seek(0)
+
+    return FileResponse(buf,as_attachment=True,filename='invoice.pdf')
+    # pass
     
