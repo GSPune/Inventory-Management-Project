@@ -40,6 +40,12 @@ def customers(request):
 @api_view(['POST'])
 def sales_bill(request):
     if request.method == 'POST':
+        finalOutput = {}
+        c = Customer.objects.get(pk=request.data['Customer_id'])
+        finalOutput.update({"Customer_Name":c.Name})
+        finalOutput.update({"Date":date.today})
+        # finalOutput.update({"Bought_Products":[]})
+
         total_amt = 0.00000
         # Decimal(total_amt)
         count = 0
@@ -65,6 +71,7 @@ def sales_bill(request):
         if serializer.is_valid():
             instance = serializer.save()
             # When you call serializer.save(), it returns the saved object instance.
+            finalOutput.update({"Bill_id":instance.id})
             if not order_products(instance,request.data['Bought_Products']):
                 return Response({"Error":"In Products Data"},status=status.HTTP_400_BAD_REQUEST)
             return Response(serializer.data,status=status.HTTP_201_CREATED)
