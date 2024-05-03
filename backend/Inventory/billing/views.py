@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from decimal import *
 
-import reportlab,io
+import requests,reportlab,io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
@@ -36,25 +36,31 @@ def customers(request):
         return Response(serializer.data,status=status.HTTP_200_OK)
 
 # A QuerySet represents a collection of objects from your database. It can have zero, one or many filters.
-# Filters narrow down the query results based on the given parameters.    
-@api_view(['POST'])
+# Filters narrow down the query results based on the given parameters. 
+   
+# get() is a method that doesn't return a queryset...Returns the object matching the given lookup parameters
+@api_view(['POST']) 
 def sales_bill(request):
     if request.method == 'POST':
+        #Build the response to the sent..should contain order/bill details/summary
         finalOutput = {}
         c = Customer.objects.get(pk=request.data['Customer_id'])
         finalOutput.update({"Customer_Name":c.Name})
         finalOutput.update({"Date":date.today})
-        # finalOutput.update({"Bought_Products":[]})
+        Prod_List = []
 
         total_amt = 0.00000
         # Decimal(total_amt)
         count = 0
         # print(request.data['Bought_Products']) ... list of dictionaries
         for product in request.data['Bought_Products']:
+            prow = {}
             #print(product)...this is a dict
             qty = product['Quantity']
             ID = product['Product_id']
             prev = Products.objects.get(pk = ID)
+            prow.update({"Product_Name":prev.Product_name})
+            prow.update({"Quantity":qty})
             curr = prev.Quantity
             #Updating the quantities in the products table!
             Products.objects.filter(pk = ID).update(Quantity = curr - qty)
@@ -62,9 +68,13 @@ def sales_bill(request):
 
             count = count + 1
             price = Products.objects.get(pk = ID).Product_price
+            prow.update({"Price":price})
             val = price * qty
+            prow.update({"Amount":val})
             total_amt = Decimal(total_amt) + val
+            Prod_List.append(prow)
 
+        finalOutput.update({"Summary":Prod_List})
         order_summary = {}
         order_summary.update({"Customer":request.data['Customer_id'],"Total":round(total_amt,3),"Items_Bought":count})
         serializer = OrdersInSerializer(data = order_summary)
@@ -74,7 +84,10 @@ def sales_bill(request):
             finalOutput.update({"Bill_id":instance.id})
             if not order_products(instance,request.data['Bought_Products']):
                 return Response({"Error":"In Products Data"},status=status.HTTP_400_BAD_REQUEST)
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            # return Response(serializer.data,status=status.HTTP_201_CREATED)
+            # url = 'http://127.0.0.1:8000/v1/billing/generate-pdf/'
+            # api_call = requests.post(url,data=finalOutput) -- How do you send this in the Response()?
+            return Response(finalOutput,status=status.HTTP_201_CREATED)
         #else
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
@@ -95,11 +108,13 @@ def order_products(model_object,products_info):
             break
     return flag
 
-@api_view(['GET'])
+@api_view(['POST','GET'])
 # def generate_pdf(self,request,queryset):
 def generate_pdf(request):
     buf = io.BytesIO()
     #create a canvas
+    # The above code creates a canvas object which will generate a PDF file stored in buf in the current
+    # working directory. 
     c = canvas.Canvas(buf,pagesize=letter,bottomup=0)
     #Create a text object
     textob =  c.beginText()
@@ -107,13 +122,13 @@ def generate_pdf(request):
     textob.setFont("Helvetica",14)
 
     #Add some lines of text
-    lines = [
-        "This is line 1",
-        "This is line 2",
-        "This is line 3",
-    ]
+    # lines = [
+    #     "This is line 1",
+    #     "This is line 2",
+    #     "This is line 3",
+    # ]
 
-    for line in lines:
+    for line in request.data.values():
         textob.textLine(line)
     
     c.drawText(textob)
