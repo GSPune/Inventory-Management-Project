@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { TextField } from "@mui/material";
+import { TextField, Select } from "@mui/material";
 import styles from "./salesbill.module.css";
 import { Button as MuiButton } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
 import { v4 as uuidv4 } from "uuid";
 import { MdDeleteOutline } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
+import axios from "../api/axios";
+import BASE_URL from "../config";
+
+const SELECT_PRODUCTS_URL = BASE_URL + "products/";
 
 export default function TableForm({
   description,
@@ -19,37 +24,118 @@ export default function TableForm({
   setList,
   total,
   setTotal,
+  products,
+  setProducts,
+  selectedProductId,
+  setSelectedProductId,
+  selectedProductPrice,
+  setSelectedProductPrice,
+  // selectedProducts,
+  // setSelectedProducts,
 }) {
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(SELECT_PRODUCTS_URL);
+        console.log(response.data);
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [setProducts]);
+
+  // Fetch product price when product selection changes
+  useEffect(() => {
+    if (selectedProductId) {
+      fetchProductPrice(selectedProductId);
+    } else {
+      // Reset the selected product price if no product is selected
+      // setSelectedProductPrice(0);
+    }
+  }, [selectedProductId]);
+
+  // Function to fetch product price
+  const fetchProductPrice = async (productId) => {
+    try {
+      const response = await axios.get(`products/{productId}`);
+      setSelectedProductPrice(response.data.price);
+    } catch (error) {
+      console.error("Error fetching product price:", error);
+      // Reset the selected product price in case of an error
+      setSelectedProductPrice(0);
+    }
+  };
 
   // Submit form function
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!selectedProductId) return;
 
-    const newItems = {
-      id: uuidv4(),
-      description,
-      quantity,
-      price,
-      amount,
-    };
-    setDescription("");
+    const selectedProduct = products.find(
+      (product) => product.id === selectedProductId
+    );
+
+    if (!selectedProduct || selectedProduct.quantity < quantity) {
+      // Show error message
+      alert("Sorry, Product is not available in sufficient quantity.");
+      return;
+    }
+
+    if (selectedProduct) {
+      const newItems = {
+        id: uuidv4(),
+        description: selectedProduct.name,
+        quantity,
+        price: selectedProduct.price,
+        amount: quantity * selectedProduct.price,
+      };
+      // setDescription("");
+      // setQuantity("");
+      // setPrice("");
+      // setAmount("");
+      setList([...list, newItems]);
+      setTotal(total + newItems.amount);
+      // setIsEditing(false);
+      // console.log(list);
+    }
+
+    // Reset form fields
+    setSelectedProductId("");
     setQuantity("");
-    setPrice("");
     setAmount("");
-    setList([...list, newItems]);
-    setIsEditing(false);
-    console.log(list);
+    setSelectedProductPrice(0);
   };
 
-  // Calculate items amount function
-  useEffect(() => {
-    const calculateAmount = (amount) => {
-      setAmount(quantity * price);
-    };
+  // const fetchProductPrice = async (productId) => {
+  //   try {
+  //     const response = await axios.get(`products/${productId}`);
+  //     if (response.data.price) {
+  //       setSelectedProductPrice(response.data.price);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in fetching product price:", error);
+  //   }
+  // };
 
-    calculateAmount(amount);
-  }, [amount, price, quantity, setAmount]);
+  // const handleProductChange = (e) => {
+  //   setSelectedProductId(e.target.value);
+  //   fetchProductPrice(e.target.value);
+  // };
+
+  // Calculate items amount function
+
+  // useEffect(() => {
+  //   const calculateAmount = (amount) => {
+  //     setAmount(quantity * price);
+  //   };
+
+  //   calculateAmount(amount);
+  // }, [amount, price, quantity, setAmount]);
 
   // Calculate total amount of products
   useEffect(() => {
@@ -74,23 +160,34 @@ export default function TableForm({
   };
 
   // Delete function
-  const deleteRow = (id) => setList(list.filter((row) => row.id !== id));
+  const deleteRow = (id) => {
+    setList(list.filter((row) => row.id !== id));
+    const deletedItem = list.find((row) => row.id === id);
+    setTotal(total - deletedItem.amount);
+  };
 
   return (
     <>
       <form onSubmit={handleSubmit}>
         <div className={`${styles.grid} ${styles["grid-cols-2"]}`}>
           <div className={styles.tableval}>
-            <label htmlFor="description">Product Name</label>
-            <TextField
+            <label htmlFor="product">Product Name</label>
+            <Select
               variant="filled"
-              label="Enter Product Name"
-              id="description"
-              name="description"
+              label="Select Product"
+              // id="description"
+              // name="description"
               autoComplete="off"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+              value={selectedProductId}
+              onChange={(e) => setSelectedProductId(e.target.value)}
+              // onChange={(e) => setDescription(e.target.value)}
+            >
+              {products.map((product) => (
+                <MenuItem key={product.id} value={product.id}>
+                  {product.name}
+                </MenuItem>
+              ))}
+            </Select>
           </div>
 
           <div className={styles.tableval}>
@@ -116,8 +213,9 @@ export default function TableForm({
               id="price"
               name="price"
               autoComplete="off"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              value={selectedProductPrice}
+              disabled
+              // onChange={(e) => setPrice(e.target.value)}
             />
           </div>
 
