@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from decimal import *
 
-import requests,reportlab,io
+import requests,reportlab,io,json
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
@@ -45,8 +45,8 @@ def sales_bill(request):
         #Build the response to the sent..should contain order/bill details/summary
         finalOutput = {}
         c = Customer.objects.get(pk=request.data['Customer_id'])
-        finalOutput.update({"Customer_Name":c.Name})
-        finalOutput.update({"Date":date.today})
+        finalOutput.update({"Customer_Name":str(c.Name)})
+        finalOutput.update({"Date":str(date.today())})
         Prod_List = []
 
         total_amt = 0.00000
@@ -74,14 +74,16 @@ def sales_bill(request):
             total_amt = Decimal(total_amt) + val
             Prod_List.append(prow)
 
-        finalOutput.update({"Summary":Prod_List})
+        finalOutput.update({"Total":str(total_amt)})
+        finalOutput.update({"Summary":str(Prod_List)})
         order_summary = {}
         order_summary.update({"Customer":request.data['Customer_id'],"Total":round(total_amt,3),"Items_Bought":count})
         serializer = OrdersInSerializer(data = order_summary)
         if serializer.is_valid():
             instance = serializer.save()
             # When you call serializer.save(), it returns the saved object instance.
-            finalOutput.update({"Bill_id":instance.id})
+            finalOutput.update({"Bill_id":str(instance.id)})
+            # finalOutput = json.dumps(finalOutput)
             if not order_products(instance,request.data['Bought_Products']):
                 return Response({"Error":"In Products Data"},status=status.HTTP_400_BAD_REQUEST)
             # return Response(serializer.data,status=status.HTTP_201_CREATED)
