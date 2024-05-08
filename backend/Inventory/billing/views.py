@@ -24,8 +24,10 @@ def products(request):
     if request.method == 'GET':
         prod = Products.objects.filter(Quantity__gt = 0).filter(Expiry_Date__gte = date.today())
         serializer = ProductSerializer(prod,many=True)
+        products = {}
+        products.update({"Data":serializer.data})
         #return JsonResponse(serializer.data,safe=False)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response(products,status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def customers(request):
@@ -33,7 +35,9 @@ def customers(request):
         customers = Customer.objects.all() #database-abstraction API that lets you create, retrieve, update and delete objects
         serializer = CustomerSerializer(customers,many=True)
         #return JsonResponse(serializer.data,safe=False)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        list_customers = {}
+        list_customers.update({"Data":serializer.data})
+        return Response(list_customers,status=status.HTTP_200_OK)
 
 # A QuerySet represents a collection of objects from your database. It can have zero, one or many filters.
 # Filters narrow down the query results based on the given parameters. 
