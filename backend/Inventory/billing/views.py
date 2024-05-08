@@ -74,15 +74,15 @@ def sales_bill(request):
             total_amt = Decimal(total_amt) + val
             Prod_List.append(prow)
 
-        finalOutput.update({"Total":str(total_amt)})
-        finalOutput.update({"Summary":str(Prod_List)})
+        finalOutput.update({"Total":total_amt})
+        finalOutput.update({"Summary":Prod_List})
         order_summary = {}
         order_summary.update({"Customer":request.data['Customer_id'],"Total":round(total_amt,3),"Items_Bought":count})
         serializer = OrdersInSerializer(data = order_summary)
         if serializer.is_valid():
             instance = serializer.save()
             # When you call serializer.save(), it returns the saved object instance.
-            finalOutput.update({"Bill_id":str(instance.id)})
+            finalOutput.update({"Bill_id":instance.id})
             # finalOutput = json.dumps(finalOutput)
             if not order_products(instance,request.data['Bought_Products']):
                 return Response({"Error":"In Products Data"},status=status.HTTP_400_BAD_REQUEST)
