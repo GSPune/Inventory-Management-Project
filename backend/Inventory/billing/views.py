@@ -145,3 +145,5 @@ def generate_pdf(request):
     return FileResponse(buf,as_attachment=True,filename='invoice.pdf')
     # pass
     
+# sudo service mysql start
+# python3 manage.py runserver 0:8000
