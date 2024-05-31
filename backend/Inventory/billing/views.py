@@ -130,13 +130,13 @@ def generate_pdf(request):
     page_width = 8.5 * inch
     text = "INVENTO XYZ"
     text_width = len(text) * 18  # Assuming font size 14
-    x_center = ((page_width - text_width) / 2) - 25
+    x_center = ((page_width - text_width) / 2) - 12
     textob.setTextOrigin(x_center, inch)
 
     # Add some lines of text
     lines = [
         "           INVENTO XYZ",
-        "Kalyani Nagar,Pune,MH         ",
+        "    Kalyani Nagar,Pune,MH",
         # "This is line 3",
     ]
 
@@ -161,7 +161,7 @@ def generate_pdf(request):
                 data.append(drow)
             # textob.textLine(v)
     data.append(['Product Name','Quantity','Price','Amount'])
-    print(data)
+    # print(data)
 
     table = Table(data,colWidths=[120, 120, 120, 120])
 
