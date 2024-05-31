@@ -23,13 +23,100 @@ import Swal from "sweetalert2";
 const PRODUCT_URL = BASE_URL + "products/add/";
 const LIST_PRODUCTS_URL = BASE_URL + "products/view/";
 const DELETE_PRODUCTS_URL = BASE_URL + "products/delete/";
+const UPDATE_PRODUCT_URL = BASE_URL + "updateprodcuts/";
 
 const Inventory = () => {
+  const initialFormState = {
+    // id: 0,
+    Product_name: "",
+    Product_price: 0.0,
+    Quantity: 0,
+    Units: "",
+    Expiry_Date: "",
+    Category: "",
+  };
+
   // const history = useNavigate();
 
   const [openPopup, setOpenPopup] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [inpval, setInpval] = useState(initialFormState);
   const [products, setProducts] = useState([]);
+  const [errors, setErrors] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+
+  const getData = (e) => {
+    const { value, name } = e.target || {};
+
+    setInpval((prevState) => {
+      return {
+        // ...inpval,
+        ...prevState,
+        [name]: value, // Parse quantity to integer
+      };
+    });
+  };
+
+  const addData = async (e) => {
+    e.preventDefault();
+
+    setInpval((prevState) => ({
+      ...prevState,
+      // Expiry_Date: formattedDate,
+    }));
+
+    const {
+      id,
+      Product_name,
+      Product_price,
+      Quantity,
+      Units,
+      Expiry_Date,
+      Category,
+    } = inpval;
+
+    const validationErrors = {};
+    if (!inpval.Product_name.trim()) {
+      validationErrors.Product_name = "Field is required";
+    } else if (!inpval.Product_price.trim()) {
+      validationErrors.Product_price = "Field is required";
+    }
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        await axios
+          .post(
+            PRODUCT_URL,
+            JSON.stringify({
+              // id,
+              Product_name,
+              Product_price,
+              Quantity,
+              Units,
+              Expiry_Date,
+              Category,
+            }),
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+          )
+          .then((response) => {
+            console.log(response.data);
+            if (response.status === 200) {
+              alert("Success...!!!");
+              setOpenPopup(false);
+            }
+          });
+      } catch (errors) {
+        if (!errors?.response) {
+          setErrors("No server response");
+        } else {
+          setErrors("Failed");
+        }
+      }
+    }
+  };
 
   // const handleClosePopup = () => {
   //   setOpenPopup(false);
@@ -55,16 +142,6 @@ const Inventory = () => {
       console.error("Error fetching products:", error);
     }
   };
-
-  // const options = [
-  //   { value: "all", label: "All" },
-  //   { value: "vegetables", label: "Vegetables" },
-  //   { value: "dairy_products", label: "Dairy Products" },
-  //   { value: "beverages", label: "Beverages & Cold Drinks" },
-  //   { value: "bakery", label: "Bakery products" },
-  //   { value: "snacks", label: "Snacks" },
-  //   { value: "medicines", label: "Medicines" },
-  // ];
 
   const filterProductsByCategory = (Category) => {
     setSelectedCategory(Category);
@@ -96,6 +173,70 @@ const Inventory = () => {
     }
   };
 
+  const handleUpdateProduct = (index) => {
+    // Set the newCustomer state to the customer being edited
+    setInpval(products[index]);
+    setEditingIndex(index);
+    setOpenPopup(true);
+  };
+
+  const handleUpdate = async (index) => {
+    const updatedCashier = [...products];
+    updatedCashier[editingIndex] = inpval;
+    setProducts(updatedCashier);
+    setEditingIndex(null);
+    setOpenPopup(false);
+
+    const {
+      id,
+      Product_name,
+      Product_price,
+      Quantity,
+      Units,
+      Expiry_Date,
+      Category,
+    } = inpval;
+
+    const validationErrors = {};
+    if (!inpval.trim(Product_name)) {
+      validationErrors.Product_name = "Field is required";
+    } else if (!inpval.trim(Product_price)) {
+      validationErrors.Product_price = "Field is required";
+    }
+    setErrors(validationErrors);
+
+    const PAYLOAD = JSON.stringify({
+      id: inpval.id,
+      Product_name: inpval.Product_name,
+      Product_price: inpval.Product_price,
+      Quantity: inpval.Quantity,
+      Units: inpval.Units,
+      Expiry_Date: inpval.Expiry_Date,
+      Category: inpval.Category,
+    });
+
+    console.log(PAYLOAD);
+    if (Object.keys(validationErrors).length === 0) {
+      // if(cashier.id == ''){
+      try {
+        const response = axios.put(UPDATE_PRODUCT_URL, PAYLOAD, {
+          headers: { "Content-Type": "application/json" },
+        });
+        console.log(response.data);
+        if (response.status === 200) {
+          alert("Product updated successfully...!!!");
+          setOpenPopup(false);
+        }
+      } catch (errors) {
+        if (!errors?.response) {
+          setErrors("No server response");
+        } else {
+          setErrors("Failed");
+        }
+      }
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -114,15 +255,6 @@ const Inventory = () => {
             </button>
             {/* </div>
           <div> */}
-            {/* <Select
-              className="selectcat"
-              value={selectedCategory}
-              onChange={(selectedOption) => {
-                console.log("Selected option:", selectedOption);
-                filterProductsByCategory(selectedOption);
-              }}
-              options={options}
-            /> */}
 
             <Select
               className="category"
@@ -178,6 +310,7 @@ const Inventory = () => {
                         <button
                           className="update"
                           onClick={() => {
+                            handleUpdateProduct(index);
                             setOpenPopup(true);
                           }}
                         >
