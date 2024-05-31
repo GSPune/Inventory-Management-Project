@@ -124,19 +124,44 @@ def generate_pdf(request):
     c = canvas.Canvas(buf,pagesize=letter,bottomup=0)
     #Create a text object
     textob =  c.beginText()
-    textob.setTextOrigin(inch,inch)
+    # textob.setTextOrigin(3*inch,1*inch)
+    textob.setFont("Helvetica-Bold",14)
+
+    page_width = 8.5 * inch
+    text = "INVENTO XYZ"
+    text_width = len(text) * 14  # Assuming font size 14
+    x_center = ((page_width - text_width) / 2) - 25
+    textob.setTextOrigin(x_center, inch)
+
+    # Add some lines of text
+    lines = [
+        "        INVENTO XYZ",
+        "Kalyani Nagar,Pune,MH     ",
+        # "This is line 3",
+    ]
+
+    for l in lines:
+        textob.textLine(l)
+
     textob.setFont("Helvetica",14)
+    textob.textLine("")
+    textob.setTextOrigin(1*inch,textob.getY())
 
-    #Add some lines of text
-    # lines = [
-    #     "This is line 1",
-    #     "This is line 2",
-    #     "This is line 3",
-    # ]
 
-    for line in request.data.values():
-        textob.textLine(line)
-    
+    data = [['Product Name','Quantity','Price','Amount']]
+    for k,v in request.data.items():
+        if (k != "Summary"):
+            textob.textLine(k+": "+str(v))
+        else:
+            for item in v:
+                drow = []
+                for val in item.values():
+                    drow.append(str(val))
+                data.append(drow)
+            # textob.textLine(v)
+        # print(v)
+        # textob.textLine(v)
+    print(data)
     c.drawText(textob)
     c.showPage()
     c.save()    
@@ -144,6 +169,7 @@ def generate_pdf(request):
 
     return FileResponse(buf,as_attachment=True,filename='invoice.pdf')
     # pass
+
     
 # sudo service mysql start
 # python3 manage.py runserver 0:8000
