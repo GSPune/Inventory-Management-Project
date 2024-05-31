@@ -117,26 +117,26 @@ def order_products(model_object,products_info):
 @api_view(['POST','GET'])
 # def generate_pdf(self,request,queryset):
 def generate_pdf(request):
-    buf = io.BytesIO()
+    buffer = io.BytesIO()
     #create a canvas
     # The above code creates a canvas object which will generate a PDF file stored in buf in the current
     # working directory. 
-    c = canvas.Canvas(buf,pagesize=letter,bottomup=0)
+    c = canvas.Canvas(buffer,pagesize=letter,bottomup=0)
     #Create a text object
     textob =  c.beginText()
     # textob.setTextOrigin(3*inch,1*inch)
-    textob.setFont("Helvetica-Bold",14)
+    textob.setFont("Helvetica-Bold",18)
 
     page_width = 8.5 * inch
     text = "INVENTO XYZ"
-    text_width = len(text) * 14  # Assuming font size 14
+    text_width = len(text) * 18  # Assuming font size 14
     x_center = ((page_width - text_width) / 2) - 25
     textob.setTextOrigin(x_center, inch)
 
     # Add some lines of text
     lines = [
-        "        INVENTO XYZ",
-        "Kalyani Nagar,Pune,MH     ",
+        "           INVENTO XYZ",
+        "Kalyani Nagar,Pune,MH         ",
         # "This is line 3",
     ]
 
@@ -148,10 +148,11 @@ def generate_pdf(request):
     textob.setTextOrigin(1*inch,textob.getY())
 
 
-    data = [['Product Name','Quantity','Price','Amount']]
+    data = []
     for k,v in request.data.items():
         if (k != "Summary"):
             textob.textLine(k+": "+str(v))
+            textob.textLine("")
         else:
             for item in v:
                 drow = []
@@ -159,15 +160,31 @@ def generate_pdf(request):
                     drow.append(str(val))
                 data.append(drow)
             # textob.textLine(v)
-        # print(v)
-        # textob.textLine(v)
+    data.append(['Product Name','Quantity','Price','Amount'])
     print(data)
+
+    table = Table(data,colWidths=[120, 120, 120, 120])
+
+    table.setStyle(TableStyle([
+    ('BACKGROUND', (0, -1), (-1, -1), colors.gray),  # Header row background color
+    ('TEXTCOLOR', (0, -1), (-1, -1), colors.whitesmoke),  # Header text color
+    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center-align all cells
+    ('BOTTOMPADDING', (0, 0), (-1, -1), 15),  # Center-align all cells
+    # ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),  # Grid lines
+    ('BOX', (0, 0), (-1, -1), 0.5, colors.black),  # Cell borders
+]))
+
+    textob.textLine("")
+    # Draw the table on the canvas
+    table.wrapOn(c, 2*inch, inch)  # Set the table width and height
+    table.drawOn(c, textob.getX(), textob.getY())  # Set the position (x, y) on the canvas
+
     c.drawText(textob)
     c.showPage()
     c.save()    
-    buf.seek(0)
+    buffer.seek(0)
 
-    return FileResponse(buf,as_attachment=True,filename='invoice.pdf')
+    return FileResponse(buffer,as_attachment=True,filename='invoice.pdf')
     # pass
 
     
