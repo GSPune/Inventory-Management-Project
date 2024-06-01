@@ -14,6 +14,7 @@ import BASE_URL from "../../config";
 // const BASE_URL = "http://192.168.177.25:8000/v1/";
 const PRODUCT_URL = BASE_URL + "products/add/";
 const LIST_PRODUCTS_URL = BASE_URL + "products/view/";
+const UPDATE_PRODUCTS_URL = BASE_URL + "products/update/";
 
 // const useStyle = makeStyles((theme) => ({
 //   root: {
@@ -63,11 +64,11 @@ const ProductForm = () => {
     //const formattedDate = moment(inpval.Expiry_Date).format("YYYY-MM-DD");
     // Update inpval with the formatted date
 
-    // setInpval(initialFormState);
-    setInpval((prevState) => ({
-      ...prevState,
-      // Expiry_Date: formattedDate,
-    }));
+    setInpval(initialFormState);
+    // setInpval((prevState) => ({
+    //   ...prevState,
+    //   // Expiry_Date: formattedDate,
+    // }));
 
     const {
       id,
@@ -149,6 +150,66 @@ const ProductForm = () => {
   //     onclose(); // Close the popup
   //   };
 
+  const handleUpdate = async (index) => {
+    const updatedProduct = [...products];
+    updatedProduct[editingIndex] = inpval;
+    setProducts(updatedProduct);
+    setEditingIndex(null);
+    setOpenPopup(false);
+    // const handleUpdate = async (cashier) => {
+    //e.preventDefault(); //to prevent the form from reloading the page.
+    const {
+      id,
+      Product_name,
+      Product_price,
+      Quantity,
+      Units,
+      Expiry_Date,
+      Category,
+    } = inpval;
+
+    //   currentCashierID = cashier.id;
+    //  console.log(cashier.id);
+
+    const validationErrors = {};
+    if (!inpval.Product_name.trim()) {
+      validationErrors.Product_name = "Field is required";
+    } else if (!inpval.Product_price.trim()) {
+      validationErrors.Product_price = "Field is required";
+    }
+
+    const PAYLOAD = JSON.stringify({
+      id: inpval.id,
+      Product_name: inpval.Product_name,
+      Product_price: inpval.Product_price,
+      Quantity: inpval.Quantity,
+      Units: inpval.Units,
+      Expiry_Date: inpval.Expiry_Date,
+      Category: inpval.Category,
+    });
+
+    console.log(PAYLOAD);
+    if (Object.keys(validationErrors).length === 0) {
+      // if(cashier.id == ''){
+      try {
+        const response = axios.put(UPDATE_PRODUCTS_URL, PAYLOAD, {
+          headers: { "Content-Type": "application/json" },
+        });
+        console.log(response.data);
+        if (response.status === 200) {
+          alert("Product updated successfully...!!!");
+          setOpenPopup(false);
+        }
+      } catch (errors) {
+        if (!errors?.response) {
+          setErrors("No server response");
+        } else {
+          setErrors("Failed");
+        }
+      }
+    }
+  };
+
   return (
     <div className="popup-form">
       <form className="form-container">
@@ -226,24 +287,6 @@ const ProductForm = () => {
               onChange={getData}
             />
 
-            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-              {/* <DemoContainer components={["DatePicker"]}> */}
-            {/* <label htmlFor="Expiry_Date">Expiry Date:</label>
-            <DateField
-              className="datefield-container"
-              inputClassName="datefield-input"
-              labelClassName="datefield-label"
-              variant="filled"
-              id="Expiry_Date"
-              // label="Expiry Date"
-              name="Expiry_Date"
-              format="YYYY-MM-DD"
-              value={inpval.Expiry_Date}
-              onChange={getData}
-            /> */}
-            {/* </DemoContainer> 
-            </LocalizationProvider> */}
-
             {/* <div> */}
             <FormControl className="category-container">
               {/* sx={{ m: 1, minWidth: 70 }}> */}
@@ -286,7 +329,15 @@ const ProductForm = () => {
               size="large"
               // text="Submit"
               type="submit"
-              onClick={addData}
+              onClick={() => {
+                // Check if editingIndex is null to determine whether to add or update data
+                if (editingIndex === null) {
+                  addData(); // Call addData if editingIndex is null
+                } else {
+                  handleUpdate(); // Call handleUpdate if editingIndex is not null
+                }
+              }}
+              // onClick={editingIndex !== null ? handleUpdate : addData}
             >
               Submit
             </MuiButton>
