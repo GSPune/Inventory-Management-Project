@@ -1,6 +1,6 @@
 ## Bill
 
-POST /v1/billing/new-bill
+POST /v1/billing/new-bill/
 
 ### Request Headers
 
@@ -29,13 +29,12 @@ Content-Type : application/json
 Body
 {
     "Customer_Name":"String",
-    "Mobile No": Number,
-    "Bill_No":Number,
+    "Total": Number,
+    "Bill_id":Number,
     "Date":"String",
-    "Bought_Products":[
+    "Summary":[
     {
-        "Product_name":"String", 
-        "Product_id":Number,
+        "Product_Name":"String",
         "Quantity":Number,
         "Price":Number,  
         "Net_Amount":Number }
