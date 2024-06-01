@@ -11,7 +11,6 @@ Content-Type : application/json
 ```
 {
     "Customer_id":Number,   
-    
     "Bought_Products":
     [
         {

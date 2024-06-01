@@ -170,7 +170,7 @@ def generate_pdf(request):
     ('TEXTCOLOR', (0, -1), (-1, -1), colors.whitesmoke),  # Header text color
     ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center-align all cells
     ('BOTTOMPADDING', (0, 0), (-1, -1), 15),  # Center-align all cells
-    # ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),  # Grid lines
+    ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),  # Grid lines
     ('BOX', (0, 0), (-1, -1), 0.5, colors.black),  # Cell borders
 ]))
 
